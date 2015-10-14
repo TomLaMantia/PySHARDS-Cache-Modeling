@@ -17,7 +17,6 @@ from SampleSet import SampleSet
 
 def Process():
     
-    mySampleSet = SampleSet()
     
     return
 
