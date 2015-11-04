@@ -11,13 +11,27 @@ Email:   tom.lamantia@mail.utoronto.ca
 Version: October 13, 2015
 -------------------------------------------------------
 """
-
+import os
 from LRUDistanceTree import LRUTree
 from SampleSet import SampleSet
 
-def Process():
-    
-    
-    return
+PATH_TO_TRACE_DIR = os.path.normpath(os.path.join(os.getcwd(), ".."))
 
-Process()
+T_MAX = 5
+
+fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","sample_trace.txt"), "r", encoding = "utf-8")
+
+mySampleSet = SampleSet(T_MAX)
+
+#Testing sample set eviction algorithm
+
+#thisAddress = fp.readline().strip()
+for i in range(0,5):
+    #print(thisAddress)
+    #thisAddress = fp.readline().strip()
+    mySampleSet.InsertElement(hex(i), 2*i)
+    
+mySampleSet.PrettyPrint()
+mySampleSet.InsertElement(hex(5), 2*i)
+mySampleSet.PrettyPrint()    
+

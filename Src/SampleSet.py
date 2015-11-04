@@ -7,13 +7,13 @@ of sampled disk references.
 -------------------------------------------------------
 Author:  Tom LaMantia
 Email:   tom.lamantia@mail.utoronto.ca
-Version: October 13, 2015
+Version: November 04, 2015
 -------------------------------------------------------
 """
 
 class SampleSet:
     
-    def __init__(self, initialCardinality):
+    def __init__(self, initialMaxCardinality):
         """
         -------------------------------------------------------
         The constructor for the SampleSet class
@@ -22,10 +22,16 @@ class SampleSet:
         Postconditions: Initializes an empty SampleSet (Python dictionary)
         -------------------------------------------------------
         """
-        self.sMax = initialCardinality
+        self.sMax = initialMaxCardinality
         self.tMax = None
         self.tMaxLocation = None
         self.data = dict()
+        
+        return
+    
+    def updateTMax(self, newTMax):
+        
+        self.tMax = newTmax
         
         return
     
