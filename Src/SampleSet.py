@@ -86,6 +86,7 @@ class SampleSet:
         thisLocationThreshold = self.data[thisLocation]
         
         #Remove the element
+        result = self.data[thisLocation]
         del self.data[thisLocation]
         
         #Update tMax, if necessary
@@ -101,7 +102,7 @@ class SampleSet:
                     self.tMaxLocation = thisLocation
                     self.tMax = self.data[thisLocation]
         
-        return
+        return result
     
     def FindElement(self, thisTargetLocation):
         """

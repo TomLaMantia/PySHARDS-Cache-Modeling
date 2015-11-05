@@ -48,7 +48,7 @@ class LRUTree:
             self.data[thisLocation] += 1
         
         #Insert the new value into the tree
-        self.data[locationToInsert] = 0
+        self.data[locationToInsert] = 1
         
         return
 
