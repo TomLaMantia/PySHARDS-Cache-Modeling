@@ -82,20 +82,36 @@ class Histogram:
     
     def CreateCacheCurve(self):
         
+        """
+        -------------------------------------------------------
+        Uses Matplotlib to draw a cache curve from the histogram.
+        
+        This method uses the algorithm described in Mattson et al. (1970).
+        -------------------------------------------------------
+        Preconditions: None
+        Postconditions: Displays the cache curve defined by the histogram
+        -------------------------------------------------------
+        """
         sortedBuckets = list(self.buckets.keys())
         sortedBuckets.sort()
-        
+        print(sortedBuckets)
         yAxis = list()
         nC = 0
         
         L = 0
         for i in sortedBuckets:
-            if i != -1:
-                L += self.buckets[i]
-        
+            L += self.buckets[i]
+
         for thisBucket in sortedBuckets:
-            nC += self.buckets[thisBucket]
-            yAxis.append(nC/L)
+            if thisBucket != -1:
+                nC += self.buckets[thisBucket]
+                yAxis.append(nC/L)
+            
+        print(yAxis)
+        
+        plt.plot(sortedBuckets[1:], yAxis, "ro-")
+        #plt.axis([0.2, 0.4, 0.6, 0.8])
+        plt.show()
             
         return
     

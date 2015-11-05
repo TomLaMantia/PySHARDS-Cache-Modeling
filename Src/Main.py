@@ -32,9 +32,10 @@ sampleTrace = [1,2,2,3,2,1,4,3,1,1]
 #Iterate through address in the trace
 for thisReference in sampleTrace:
     
-    #Check if the disk reference is in our sample set
-    
-    #If no
+    """
+    Check if the disk reference is in our sample set
+    If no
+    """
     if mySampleSet.FindElement(thisReference) == False:
         #Insert the reference into the sample set
         mySampleSet.InsertElement(thisReference, hash(thisReference))
@@ -46,7 +47,6 @@ for thisReference in sampleTrace:
             myHistogram.IncrementBucket(-1)
         else:
             myHistogram.AddBucket(-1,1)
-            
     #Otherwise
     else:
         #Since the address is already in the sample set, it is also in the tree. Get the stack depth
@@ -62,6 +62,7 @@ for thisReference in sampleTrace:
             myHistogram.AddBucket(stackDistanceOfThisReference, 1)
                    
 print(myHistogram.buckets)
+myHistogram.CreateCacheCurve()
         
 
 
