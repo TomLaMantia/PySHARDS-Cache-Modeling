@@ -62,6 +62,16 @@ class SampleSet:
             #Remove evicted element from the distance tree in user program!
             evictedElement = self.tMaxLocation
             del self.data[self.tMaxLocation]
+            
+            #Need to update tMax, tMax location
+            thisPair = self.data.popitem()
+            self.data[thisPair[0]] = thisPair[1]
+            self.tMax = thisPair[1]
+            self.tMaxLocation = thisPair[0]
+            for thisLi in self.data.keys():
+                if self.data[thisLi] > self.tMax:
+                    self.tMax = self.data[thisLi]
+                    self.tMaxLocation = thisLi
         else:
             #Update the threshold (if necessary)
             if (self.tMax == None) or (thisThreshold > self.tMax):

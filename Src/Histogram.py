@@ -111,6 +111,7 @@ class Histogram:
         
         plt.plot(sortedBuckets[1:], yAxis, "ro-")
         #plt.axis([0.2, 0.4, 0.6, 0.8])
+        plt.axis([0,L,0,max(yAxis) + yAxis[len(yAxis)-1]/L])
         plt.show()
             
         return
