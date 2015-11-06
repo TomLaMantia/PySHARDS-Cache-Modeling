@@ -29,7 +29,18 @@ class SampleSet:
         
         return
     
-    def updateTMax(self, newTMax):
+    def GetTMax(self):
+        """
+        -------------------------------------------------------
+        Getter method for tMax
+        -------------------------------------------------------
+        Preconditions: None
+        Postconditions: Returns self.tMax
+        -------------------------------------------------------
+        """
+        return self.tMax
+    
+    def UpdateTMax(self, newTMax):
         
         self.tMax = newTmax
         
