@@ -23,15 +23,59 @@ INDEX_OF_LAST_CHAR_IN_REF = 18
 
 global SAMPLE_RATE
 
-def ClassicLRUSHARDS():
+def GenerateExactMRC(fp):
+    
+    """
+    Classic Mattson algorithm
+    """
+    myHistogram = Histogram()
+    myDistanceTree = LRUTree()
+
+    thisReference = fp.readline().strip()
+    while thisReference != "":
+
+        thisReference = thisReference[0:INDEX_OF_LAST_CHAR_IN_REF]
+
+        """
+        Check if the disk reference is in our sample set
+        """
+        #If yes
+        if mySampleSet.FindElement(thisReference) == False:
+            #Insert the reference into the sample set
+            mySampleSet.InsertElement(thisReference, hash(thisReference))
+            #Insert the element into the distance tree
+            myDistanceTree.InsertElement(thisReference)
+            #If a miss occurs ("infinite" stack depth), record it in the histogram
+            if myHistogram.BucketInHistogram(-1) == True:
+                myHistogram.IncrementBucket(-1)
+            else:
+                myHistogram.AddBucket(-1, 1)
+        #If no
+        else:
+            #Since the address is already in the sample set, it is also in the tree. Get the stack depth
+            stackDistanceOfThisReference = myDistanceTree.GetDistanceOfElement(thisReference)
+            # Remove it from the stack and re-push it (since the stack distance of this element is now 1)
+            myDistanceTree.RemoveElement(thisReference)
+            evictedElement = myDistanceTree.InsertElement(thisReference)
+            
+            #If this insertion caused a disk reference to be evicted, we update the sampling rate accordingly
+            #if evictedElement != None:
+                #SAMPLING_RATE = mySampleSet.GetTMax()
+                
+            # Update the histogram with the old stack depth of thisReference
+            if myHistogram.BucketInHistogram(stackDistanceOfThisReference):
+                myHistogram.IncrementBucket(stackDistanceOfThisReference)
+            else:
+                myHistogram.AddBucket(stackDistanceOfThisReference, 1)    
+    return
+
+def ClassicLRUSHARDS(fp):
     
     """
     Since this is fixed size SHARDS, start by sampling every reference. The sampling rate
     will be lowered accordingly as the SampleSet reaches maximum capacity.
     """
-    SAMPLE_RATE = 50
-    
-    fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","filteredTrace.csv"), "r", encoding = "utf-8")
+    SAMPLE_RATE = 3
 
     mySampleSet = SampleSet(S_MAX)
     myHistogram = Histogram()
@@ -41,6 +85,7 @@ def ClassicLRUSHARDS():
     while thisReference != "":
         i += 1
         thisReference = thisReference[0:INDEX_OF_LAST_CHAR_IN_REF]
+        #print(thisReference)
         #We only sample those disk references which satisfy our sampling condition 
         if (hash(thisReference) % 100) < SAMPLE_RATE:
 
@@ -67,25 +112,22 @@ def ClassicLRUSHARDS():
                 evictedElement = myDistanceTree.InsertElement(thisReference)
                 
                 #If this insertion caused a disk reference to be evicted, we update the sampling rate accordingly
-                #if evictedElement != None:
-                    #SAMPLING_RATE = mySampleSet.GetTMax()
+                if evictedElement != None:
+                    SAMPLING_RATE = mySampleSet.GetTMax()
                     
                 # Update the histogram with the old stack depth of thisReference
                 if myHistogram.BucketInHistogram(stackDistanceOfThisReference):
                     myHistogram.IncrementBucket(stackDistanceOfThisReference)
                 else:
                     myHistogram.AddBucket(stackDistanceOfThisReference, 1)
-        print(i)            
+        if i % 10 == 0:
+            print(i)            
         thisReference = fp.readline().strip()
-    print(len(mySampleSet.data))
+    #print(len(mySampleSet.data))
+    #print(myHistogram.buckets)
+    myHistogram.CreateCacheCurve()
 
     return
 
-ClassicLRUSHARDS()
-    
-
-
-        
-
-
-
+fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","sample_trace_2.txt"), "r", encoding = "utf-8")
+ClassicLRUSHARDS(fp)
