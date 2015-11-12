@@ -18,7 +18,7 @@ from Histogram import Histogram
 
 PATH_TO_TRACE_DIR = os.path.normpath(os.path.join(os.getcwd(), ".."))
 
-S_MAX = 128
+S_MAX = 512
 INDEX_OF_LAST_CHAR_IN_REF = 18
 
 global SAMPLE_RATE
@@ -75,7 +75,7 @@ def ClassicLRUSHARDS(fp):
     Since this is fixed size SHARDS, start by sampling every reference. The sampling rate
     will be lowered accordingly as the SampleSet reaches maximum capacity.
     """
-    SAMPLE_RATE = 3
+    SAMPLE_RATE = 60
 
     mySampleSet = SampleSet(S_MAX)
     myHistogram = Histogram()
@@ -112,20 +112,22 @@ def ClassicLRUSHARDS(fp):
                 evictedElement = myDistanceTree.InsertElement(thisReference)
                 
                 #If this insertion caused a disk reference to be evicted, we update the sampling rate accordingly
-                if evictedElement != None:
-                    SAMPLING_RATE = mySampleSet.GetTMax()
+                #if evictedElement != None:
+                    #SAMPLING_RATE = mySampleSet.GetTMax()
                     
                 # Update the histogram with the old stack depth of thisReference
                 if myHistogram.BucketInHistogram(stackDistanceOfThisReference):
                     myHistogram.IncrementBucket(stackDistanceOfThisReference)
                 else:
                     myHistogram.AddBucket(stackDistanceOfThisReference, 1)
-        if i % 10 == 0:
+        if i % 10000 == 0:
             print(i)            
         thisReference = fp.readline().strip()
-    #print(len(mySampleSet.data))
-    #print(myHistogram.buckets)
-    myHistogram.CreateCacheCurve()
+
+    myHistogram.PrintDetailedInfo()
+    print(myHistogram.buckets)
+    print(SAMPLE_RATE)
+    #myHistogram.CreateCacheCurve()
 
     return
 

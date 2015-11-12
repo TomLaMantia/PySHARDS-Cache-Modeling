@@ -80,6 +80,24 @@ class Histogram:
         
         return
     
+    def PrintDetailedInfo(self):
+        
+        sortedBuckets = list(self.buckets.keys())
+        sortedBuckets.sort()
+        refCountSoFar = 0
+        totalReferences = len(self.buckets)
+        
+        print("Dist            Refs             %Total Refs            Total References")
+        
+        for thisRef in sortedBuckets:
+            
+            numberRefsAtThisDepth = self.buckets[thisRef]
+            percentOfTotalRefs = numberRefsAtThisDepth/totalReferences
+            refCountSoFar += numberRefsAtThisDepth
+            print("{0}            {1}            {2}            {3}".format(thisRef, numberRefsAtThisDepth, percentOfTotalRefs, refCountSoFar))
+        
+        return
+    
     def CreateCacheCurve(self):
         
         """
@@ -94,7 +112,7 @@ class Histogram:
         """
         sortedBuckets = list(self.buckets.keys())
         sortedBuckets.sort()
-        print(sortedBuckets)
+
         yAxis = list()
         nC = 0
         
@@ -110,7 +128,7 @@ class Histogram:
 #         print(len(yAxis))
 #         print(set(sortedBuckets).difference(set(yAxis)))
 
-        print(len(sortedBuckets))
+        #print(len(sortedBuckets))
         plt.plot(sortedBuckets[1:], yAxis, "ro-")
         #plt.axis([0.2, 0.4, 0.6, 0.8])
         plt.axis([0,L,0,max(yAxis) + yAxis[len(yAxis)-1]/L])
