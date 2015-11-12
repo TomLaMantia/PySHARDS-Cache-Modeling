@@ -39,18 +39,15 @@ def GenerateExactMRC(fp):
         """
         Check if the disk reference is in our sample set
         """
-        #If yes
+        #If no
         if mySampleSet.FindElement(thisReference) == False:
             #Insert the reference into the sample set
             mySampleSet.InsertElement(thisReference, hash(thisReference))
             #Insert the element into the distance tree
             myDistanceTree.InsertElement(thisReference)
-            #If a miss occurs ("infinite" stack depth), record it in the histogram
-            if myHistogram.BucketInHistogram(-1) == True:
-                myHistogram.IncrementBucket(-1)
-            else:
-                myHistogram.AddBucket(-1, 1)
-        #If no
+            #A miss occurred ("infinite" stack depth), record it in the histogram
+            myHistogram.IncrementBucket(-1)
+        #If yes
         else:
             #Since the address is already in the sample set, it is also in the tree. Get the stack depth
             stackDistanceOfThisReference = myDistanceTree.GetDistanceOfElement(thisReference)
@@ -92,18 +89,15 @@ def ClassicLRUSHARDS(fp):
             """
             Check if the disk reference is in our sample set
             """
-            #If yes
+            #If no
             if mySampleSet.FindElement(thisReference) == False:
                 #Insert the reference into the sample set
                 mySampleSet.InsertElement(thisReference, hash(thisReference))
                 #Insert the element into the distance tree
                 myDistanceTree.InsertElement(thisReference)
-                #If a miss occurs ("infinite" stack depth), record it in the histogram
-                if myHistogram.BucketInHistogram(-1) == True:
-                    myHistogram.IncrementBucket(-1)
-                else:
-                    myHistogram.AddBucket(-1, 1)
-            #If no
+                #A miss occurred ("infinite" stack depth), record it in the histogram
+                myHistogram.IncrementBucket(-1)
+            #If yes
             else:
                 #Since the address is already in the sample set, it is also in the tree. Get the stack depth
                 stackDistanceOfThisReference = myDistanceTree.GetDistanceOfElement(thisReference)

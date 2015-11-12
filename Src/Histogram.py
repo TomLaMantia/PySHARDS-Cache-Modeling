@@ -27,7 +27,7 @@ class Histogram:
         Postconditions: Initializes an empty histogram
         -------------------------------------------------------
         """
-        self.buckets = dict()
+        self.buckets = {-1:0}
         
         return
     
