@@ -7,7 +7,8 @@ histogram is represented by a dictionary. Here, the keys for the
 dictionary represent stack depths. The values for each key represent
 the number of references with that stack depth. Here, -1 denotes
 an infinite stack depth (reference seen for the first time).
-Here {4:3} denotes that 3 references have a stack depth of 4.
+Here {4:3} denotes that 3 references have a stack depth (distance) of 4.
+Hence, {distance:number refs with that distance}
 -------------------------------------------------------
 Author:  Tom LaMantia
 Email:   tom.lamantia@mail.utoronto.ca
@@ -71,14 +72,27 @@ class Histogram:
         
         return
     
-    def Rescale(self, rNew, rOld):
-        
-        scaleFactor = rNew/rOld
-        
-        for thisAddress in self.buckets.keys():
-            self.buckets[thisAddress] *= scaleFactor
-        
-        return
+#     def Rescale(self, currentSamplingRate):
+#         """
+#         -------------------------------------------------------
+#         Each sampled reuse distance must be scaled by 1/sampling rate.
+#         This function allows us to do that.
+#         -------------------------------------------------------
+#         Preconditions: currentSamplingRate: the current sampling rate (%)
+#         Postconditions: Each reuse distance is rescaled by multiplying by
+#                         1/currentSamplingRate
+#         -------------------------------------------------------
+#         """
+#         scaleFactor = 1/currentSamplingRate
+#         adjustedBuckets = dict()
+#         
+#         for thisDistance in self.buckets.keys():
+#             adjustedBuckets[round(thisDistance*scaleFactor)] = self.buckets[thisDistance]
+#             
+#         self.buckets = dict()
+#         self.buckets = adjustedBuckets
+#         
+#         return
     
     def PrintDetailedInfo(self):
         

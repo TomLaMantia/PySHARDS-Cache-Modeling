@@ -48,7 +48,7 @@ class LRUTree:
             self.data[thisLocation] += 1
         
         #Insert the new value into the tree
-        self.data[locationToInsert] = 1
+        self.data[locationToInsert] = 0
         
         return
 
@@ -90,7 +90,12 @@ class LRUTree:
             Returns the reuse distance of locationToRemove
         -------------------------------------------------------
         """
-        return self.data[thisLocation]
+        try:
+            result = self.data[thisLocation]
+        except:
+            result = None
+            
+        return result
     
     def PrettyPrint(self):
         """

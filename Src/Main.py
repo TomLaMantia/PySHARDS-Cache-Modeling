@@ -18,7 +18,7 @@ from Histogram import Histogram
 
 PATH_TO_TRACE_DIR = os.path.normpath(os.path.join(os.getcwd(), ".."))
 
-S_MAX = 512
+S_MAX = 1024
 INDEX_OF_LAST_CHAR_IN_REF = 18
 
 global SAMPLE_RATE
@@ -28,6 +28,7 @@ def GenerateExactMRC(fp):
     """
     Classic Mattson algorithm
     """
+    mySampleSet = SampleSet(S_MAX)
     myHistogram = Histogram()
     myDistanceTree = LRUTree()
 
@@ -35,6 +36,8 @@ def GenerateExactMRC(fp):
     while thisReference != "":
 
         thisReference = thisReference[0:INDEX_OF_LAST_CHAR_IN_REF]
+        #print(thisReference)
+        #We only sample those disk references which satisfy our sampling condition 
 
         """
         Check if the disk reference is in our sample set
@@ -53,7 +56,7 @@ def GenerateExactMRC(fp):
             stackDistanceOfThisReference = myDistanceTree.GetDistanceOfElement(thisReference)
             # Remove it from the stack and re-push it (since the stack distance of this element is now 1)
             myDistanceTree.RemoveElement(thisReference)
-            evictedElement = myDistanceTree.InsertElement(thisReference)
+            myDistanceTree.InsertElement(thisReference)
             
             #If this insertion caused a disk reference to be evicted, we update the sampling rate accordingly
             #if evictedElement != None:
@@ -63,7 +66,12 @@ def GenerateExactMRC(fp):
             if myHistogram.BucketInHistogram(stackDistanceOfThisReference):
                 myHistogram.IncrementBucket(stackDistanceOfThisReference)
             else:
-                myHistogram.AddBucket(stackDistanceOfThisReference, 1)    
+                myHistogram.AddBucket(stackDistanceOfThisReference, 1)
+           
+        thisReference = fp.readline().strip()
+
+    myHistogram.PrintDetailedInfo()
+    myHistogram.CreateCacheCurve()
     return
 
 def ClassicLRUSHARDS(fp):
@@ -72,7 +80,7 @@ def ClassicLRUSHARDS(fp):
     Since this is fixed size SHARDS, start by sampling every reference. The sampling rate
     will be lowered accordingly as the SampleSet reaches maximum capacity.
     """
-    SAMPLE_RATE = 60
+    SAMPLE_RATE = 10
 
     mySampleSet = SampleSet(S_MAX)
     myHistogram = Histogram()
@@ -101,13 +109,15 @@ def ClassicLRUSHARDS(fp):
             else:
                 #Since the address is already in the sample set, it is also in the tree. Get the stack depth
                 stackDistanceOfThisReference = myDistanceTree.GetDistanceOfElement(thisReference)
+                
+                #This reuse distance needs to be scaled before it is inserted into the histogram
+                rescaleFactor = SAMPLE_RATE/100
+                stackDistanceOfThisReference *= rescaleFactor
+                stackDistanceOfThisReference = round(stackDistanceOfThisReference)
+                
                 # Remove it from the stack and re-push it (since the stack distance of this element is now 1)
                 myDistanceTree.RemoveElement(thisReference)
-                evictedElement = myDistanceTree.InsertElement(thisReference)
-                
-                #If this insertion caused a disk reference to be evicted, we update the sampling rate accordingly
-                #if evictedElement != None:
-                    #SAMPLING_RATE = mySampleSet.GetTMax()
+                myDistanceTree.InsertElement(thisReference)
                     
                 # Update the histogram with the old stack depth of thisReference
                 if myHistogram.BucketInHistogram(stackDistanceOfThisReference):
@@ -120,8 +130,7 @@ def ClassicLRUSHARDS(fp):
 
     myHistogram.PrintDetailedInfo()
     print(myHistogram.buckets)
-    print(SAMPLE_RATE)
-    #myHistogram.CreateCacheCurve()
+    myHistogram.CreateCacheCurve()
 
     return
 
