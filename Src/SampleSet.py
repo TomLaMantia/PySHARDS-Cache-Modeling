@@ -88,66 +88,7 @@ class SampleSet:
                 self.tMaxLocation = evictedTuple[0]
                 self.tMax = evictedTuple[1]
                 
-#         evictedElement = None
-#         #Insert the value
-#         self.data[thisLocation] = thisThreshold
-#           
-#         if len(self.data) > self.sMax:
-#             #Lower global threshold in user program!
-#             #Remove evicted element from the distance tree in user program!
-#             evictedElement = self.tMaxLocation
-#             del self.data[self.tMaxLocation]
-#             
-#             #Need to update tMax, tMax location
-#             thisPair = self.data.popitem()
-#             self.data[thisPair[0]] = thisPair[1]
-#             self.tMax = thisPair[1]
-#             self.tMaxLocation = thisPair[0]
-#             for thisLi in self.data.keys():
-#                 if self.data[thisLi] > self.tMax:
-#                     self.tMax = self.data[thisLi]
-#                     self.tMaxLocation = thisLi
-#         else:
-#             #Update the threshold (if necessary)
-#             if (self.tMax == None) or (thisThreshold > self.tMax):
-#                 self.tMaxLocation = thisLocation
-#                 self.tMax = thisThreshold
-                
         return evictedElement
-    
-#     def RemoveElement(self, thisLocation):
-#         """
-#         -------------------------------------------------------
-#         Removes an element from the SampleSet
-#         -------------------------------------------------------
-#         Preconditions: 
-#             thisLocation - the location to be removed from the SampleSet
-#         Postconditions: 
-#             thisLocation is removed from the sample set and tMax
-#             is updated if thisLocation had a threshold equal to the
-#             previous tMax.
-#         -------------------------------------------------------
-#         """
-#         #thisLocationThreshold = self.data[thisLocation]
-#         
-#         #Remove the element
-#         result = self.data[thisLocation]
-#         del self.data[thisLocation]
-#         
-#         #Update tMax, if necessary
-#         if result == self.tMax:
-#             
-#             thisPair = self.data.popitem()
-#             self.data[thisPair[0]] = thisPair[1]
-#             thisTempTMaxLocation = thisPair[0]
-#             
-#             for thisLocation in self.data.keys():
-#                 thisResult = self.data[thisLocation]
-#                 if thisResult > thisTempTMaxLocation:
-#                     self.tMaxLocation = thisLocation
-#                     self.tMax = self.data[thisLocation]
-#         
-#         return result
     
     def FindElement(self, thisTargetLocation):
         """
