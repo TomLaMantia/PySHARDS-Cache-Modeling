@@ -12,7 +12,7 @@ Hence, {distance:number refs with that distance}
 -------------------------------------------------------
 Author:  Tom LaMantia
 Email:   tom.lamantia@mail.utoronto.ca
-Version: November 04, 2015
+Version: November 12, 2015
 -------------------------------------------------------
 """
 import matplotlib.pyplot as plt
@@ -71,28 +71,6 @@ class Histogram:
         self.buckets[stackDistanceToIncrement] += 1
         
         return
-    
-#     def Rescale(self, currentSamplingRate):
-#         """
-#         -------------------------------------------------------
-#         Each sampled reuse distance must be scaled by 1/sampling rate.
-#         This function allows us to do that.
-#         -------------------------------------------------------
-#         Preconditions: currentSamplingRate: the current sampling rate (%)
-#         Postconditions: Each reuse distance is rescaled by multiplying by
-#                         1/currentSamplingRate
-#         -------------------------------------------------------
-#         """
-#         scaleFactor = 1/currentSamplingRate
-#         adjustedBuckets = dict()
-#         
-#         for thisDistance in self.buckets.keys():
-#             adjustedBuckets[round(thisDistance*scaleFactor)] = self.buckets[thisDistance]
-#             
-#         self.buckets = dict()
-#         self.buckets = adjustedBuckets
-#         
-#         return
     
     def PrintDetailedInfo(self):
         

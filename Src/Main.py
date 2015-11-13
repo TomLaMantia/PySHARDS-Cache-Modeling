@@ -8,7 +8,7 @@ in their 2015 paper "Efficient MRC Construction with SHARDS".
 -------------------------------------------------------
 Author:  Tom LaMantia
 Email:   tom.lamantia@mail.utoronto.ca
-Version: November 5, 2015
+Version: November 12, 2015
 -------------------------------------------------------
 """
 import os
@@ -134,5 +134,5 @@ def ClassicLRUSHARDS(fp):
 
     return
 
-fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","sample_trace_2.txt"), "r", encoding = "utf-8")
-ClassicLRUSHARDS(fp)
+fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","sample_trace.txt"), "r", encoding = "utf-8")
+GenerateExactMRC(fp)

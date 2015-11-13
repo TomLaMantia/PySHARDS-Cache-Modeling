@@ -11,7 +11,7 @@ some referenced location and Di is the current stack depth of that location.
 -------------------------------------------------------
 Author:  Tom LaMantia
 Email:   tom.lamantia@mail.utoronto.ca
-Version: October 13, 2015
+Version: November 12, 2015
 -------------------------------------------------------
 """
 
