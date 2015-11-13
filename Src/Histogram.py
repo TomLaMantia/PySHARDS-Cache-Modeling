@@ -117,12 +117,7 @@ class Histogram:
                 nC += self.buckets[thisBucket]
                 yAxis.append(nC/L)
 
-#         print(len(yAxis))
-#         print(set(sortedBuckets).difference(set(yAxis)))
-
-        #print(len(sortedBuckets))
         plt.plot(sortedBuckets[1:], yAxis, "ro-")
-        #plt.axis([0.2, 0.4, 0.6, 0.8])
         plt.axis([0,L,0,max(yAxis) + yAxis[len(yAxis)-1]/L])
         plt.show()
             

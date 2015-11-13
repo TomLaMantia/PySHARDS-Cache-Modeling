@@ -80,7 +80,7 @@ def ClassicLRUSHARDS(fp):
     Since this is fixed size SHARDS, start by sampling every reference. The sampling rate
     will be lowered accordingly as the SampleSet reaches maximum capacity.
     """
-    SAMPLE_RATE = 10
+    SAMPLE_RATE = 7
 
     mySampleSet = SampleSet(S_MAX)
     myHistogram = Histogram()
@@ -90,10 +90,10 @@ def ClassicLRUSHARDS(fp):
     while thisReference != "":
         i += 1
         thisReference = thisReference[0:INDEX_OF_LAST_CHAR_IN_REF]
-        #print(thisReference)
+
         #We only sample those disk references which satisfy our sampling condition 
         if (hash(thisReference) % 100) < SAMPLE_RATE:
-
+ 
             """
             Check if the disk reference is in our sample set
             """
@@ -109,16 +109,17 @@ def ClassicLRUSHARDS(fp):
             else:
                 #Since the address is already in the sample set, it is also in the tree. Get the stack depth
                 stackDistanceOfThisReference = myDistanceTree.GetDistanceOfElement(thisReference)
-                
+                 
                 #This reuse distance needs to be scaled before it is inserted into the histogram
                 rescaleFactor = SAMPLE_RATE/100
-                stackDistanceOfThisReference *= rescaleFactor
-                stackDistanceOfThisReference = round(stackDistanceOfThisReference)
                 
+                stackDistanceOfThisReference /= SAMPLE_RATE/100
+                stackDistanceOfThisReference = round(stackDistanceOfThisReference)
+                 
                 # Remove it from the stack and re-push it (since the stack distance of this element is now 1)
                 myDistanceTree.RemoveElement(thisReference)
                 myDistanceTree.InsertElement(thisReference)
-                    
+                     
                 # Update the histogram with the old stack depth of thisReference
                 if myHistogram.BucketInHistogram(stackDistanceOfThisReference):
                     myHistogram.IncrementBucket(stackDistanceOfThisReference)
@@ -134,5 +135,5 @@ def ClassicLRUSHARDS(fp):
 
     return
 
-fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","sample_trace.txt"), "r", encoding = "utf-8")
-GenerateExactMRC(fp)
+fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","filteredTrace.txt"), "r", encoding = "utf-8")
+ClassicLRUSHARDS(fp)
