@@ -116,9 +116,15 @@ class Histogram:
             if thisBucket != -1:
                 nC += self.buckets[thisBucket]
                 yAxis.append(nC/L)
+                
+        for i in range(1,len(sortedBuckets)):
+            sortedBuckets[i] *= 8
+            sortedBuckets[i] /= 1024
 
         plt.plot(sortedBuckets[1:], yAxis, "ro-")
-        plt.axis([0,L,0,max(yAxis) + yAxis[len(yAxis)-1]/L])
+        #plt.axis([0,L,0,max(yAxis) + yAxis[len(yAxis)-1]/L])
+        plt.axis([0,sortedBuckets[-1] + 5 ,0,1])
+        plt.xlabel("Cache size (GB)")
         plt.show()
             
         return
