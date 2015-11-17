@@ -15,6 +15,7 @@ import os
 from LRUDistanceTree import LRUTree
 from SampleSet import SampleSet
 from Histogram import Histogram
+from time import clock
 
 PATH_TO_TRACE_DIR = os.path.normpath(os.path.join(os.getcwd(), ".."))
 
@@ -80,12 +81,16 @@ def ClassicLRUSHARDS(fp):
     Since this is fixed size SHARDS, start by sampling every reference. The sampling rate
     will be lowered accordingly as the SampleSet reaches maximum capacity.
     """
-    SAMPLE_RATE = 7
+    SAMPLE_RATE = 1
 
     mySampleSet = SampleSet(S_MAX)
     myHistogram = Histogram()
     myDistanceTree = LRUTree()
-    i=0
+    i = 0
+    
+    #Get the current time
+    t1 = clock()
+    
     thisReference = fp.readline().strip()
     while thisReference != "":
         i += 1
@@ -131,6 +136,10 @@ def ClassicLRUSHARDS(fp):
 
     myHistogram.PrintDetailedInfo()
     print(myHistogram.buckets)
+    #Get the time again and calculate time elapsed
+    t2 = clock()
+    print("Time elapsed: {0}".format(t2 - t1))
+    
     myHistogram.CreateCacheCurve()
 
     return

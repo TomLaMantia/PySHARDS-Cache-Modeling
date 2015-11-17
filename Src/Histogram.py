@@ -122,8 +122,9 @@ class Histogram:
             sortedBuckets[i] /= 1024
 
         plt.plot(sortedBuckets[1:], yAxis, "r-")
-        plt.axis([0,sortedBuckets[-1] + 5 ,0,1])
+        plt.axis([0,sortedBuckets[-1] + 5 ,0,1.1])
         plt.xlabel("Cache size (GB)")
+        plt.ylabel("Cache Hits (%)")
         plt.show()
             
         return
