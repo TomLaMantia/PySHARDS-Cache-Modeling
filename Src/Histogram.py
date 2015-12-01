@@ -12,7 +12,7 @@ Hence, {distance:number refs with that distance}
 -------------------------------------------------------
 Author:  Tom LaMantia
 Email:   tom.lamantia@mail.utoronto.ca
-Version: November 12, 2015
+Version: December 1, 2015
 -------------------------------------------------------
 """
 import matplotlib.pyplot as plt
@@ -29,13 +29,38 @@ class Histogram:
         -------------------------------------------------------
         """
         self.buckets = {-1:0}
+        self.bucketsForExactCurve = None
         
+        return
+
+    def GetBuckets(self):
+        """
+        -------------------------------------------------------
+        Getter method for the buckets dictionary.
+        -------------------------------------------------------
+        Preconditions: None
+        Postconditions: Returns self.buckets
+        -------------------------------------------------------
+        """
+        return self.buckets
+    
+    def SetBucketsForExactCurve(self, exactBuckets):
+        """
+        -------------------------------------------------------
+        Setter method for the exact cache curve buckets.
+        -------------------------------------------------------
+        Preconditions: exactBuckets - a dictionary containing histogram
+            buckets for the exact cache curve.
+        Postconditions: Initializes bucketsForExactCurve.
+        -------------------------------------------------------
+        """
+        self.bucketsForExactCurve = exactBuckets
         return
     
     def AddBucket(self, thisStackDistance, numOfElementsWithThisDistance):
         """
         -------------------------------------------------------
-        Adds a new bucket to our histogram
+        Adds a new bucket to our histogram.
         -------------------------------------------------------
         Preconditions: thisStackDistance: an integer representing a
         stack distance.
@@ -121,9 +146,37 @@ class Histogram:
             sortedBuckets[i] *= 8
             sortedBuckets[i] /= 1024
 
+        #Plot the exact cache curve
         plt.plot(sortedBuckets[1:], yAxis, "r-")
         plt.axis([0,sortedBuckets[-1] + 5 ,0,1.1])
-        plt.xlabel("Cache size (GB)")
+
+
+
+
+        #Plot the estimated cache curve
+        sortedBuckets = list(self.bucketsForExactCurve.keys())
+        sortedBuckets.sort()
+
+        yAxis = list()
+        nC = 0
+        
+        L = 0
+        for i in sortedBuckets:
+            L += self.bucketsForExactCurve[i]
+
+        for thisBucket in sortedBuckets:
+            if thisBucket != -1:
+                nC += self.bucketsForExactCurve[thisBucket]
+                yAxis.append(nC/L)
+                
+        for i in range(1,len(sortedBuckets)):
+            sortedBuckets[i] *= 8
+            sortedBuckets[i] /= 1024
+
+        #Plot the exact cache curve
+        plt.plot(sortedBuckets[1:], yAxis, "g-")      
+        
+        plt.xlabel("Cache size (KB)")
         plt.ylabel("Cache Hits (%)")
         plt.show()
             
