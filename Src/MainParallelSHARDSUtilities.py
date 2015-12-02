@@ -203,6 +203,6 @@ def go(traceFileName):
     
     result = Histogram()
     result.SetBuckets(resultBuckets)
-    result.CreateCacheCurve()
+    #result.CreateCacheCurve()
 
     return result

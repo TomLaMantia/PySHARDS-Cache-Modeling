@@ -24,6 +24,6 @@ PARDA_OUTPUT_FILENAME = "seq2.hist"
 if __name__ == '__main__':
     estimatedCurve = MainParallelSHARDSUtilities.go(TRACE_FILE_NAME)
     
-    exactCurve = MainSequentialUtilities.GenerateExactMRCFromTrace(PARDA_OUTPUT_FILENAME)
-    estimatedCurve.SetExactBuckets(exactCurve.GetBuckets())
+    exactCurve = MainSequentialSHARDSUtilities.GenerateExactMRCFromTrace(PARDA_OUTPUT_FILENAME)
+    estimatedCurve.SetExactCurveBuckets(exactCurve.GetBuckets())
     estimatedCurve.CreateCacheCurve()

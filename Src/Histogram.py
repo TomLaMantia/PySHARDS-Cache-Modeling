@@ -57,6 +57,19 @@ class Histogram:
         self.bucketsForExactCurve = exactBuckets
         return
     
+    def SetBuckets(self, newBuckets):
+        """
+        -------------------------------------------------------
+        Setter method for the main cache curve buckets.
+        -------------------------------------------------------
+        Preconditions: newBuckets - a dictionary containing histogram
+            buckets for the main cache curve.
+        Postconditions: Initializes self.buckets.
+        -------------------------------------------------------
+        """
+        self.buckets = newBuckets
+        return
+    
     def AddBucket(self, thisStackDistance, numOfElementsWithThisDistance):
         """
         -------------------------------------------------------
