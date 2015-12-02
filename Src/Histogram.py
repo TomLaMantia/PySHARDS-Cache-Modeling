@@ -44,7 +44,7 @@ class Histogram:
         """
         return self.buckets
     
-    def SetBuckets(self, exactBuckets):
+    def SetExactCurveBuckets(self, exactBuckets):
         """
         -------------------------------------------------------
         Setter method for the exact cache curve buckets.
@@ -127,6 +127,7 @@ class Histogram:
         Postconditions: Displays the cache curve defined by the histogram
         -------------------------------------------------------
         """
+        #Plot the estimated cache curve from SHARDS
         sortedBuckets = list(self.buckets.keys())
         sortedBuckets.sort()
 
@@ -146,14 +147,10 @@ class Histogram:
             sortedBuckets[i] *= 8
             sortedBuckets[i] /= 1024
 
-        #Plot the exact cache curve
         plt.plot(sortedBuckets[1:], yAxis, "r-")
         plt.axis([0,sortedBuckets[-1] + 5 ,0,1.1])
 
-
-
-
-        #Plot the estimated cache curve
+        #Plot the exact cache curve from Parda output
         sortedBuckets = list(self.bucketsForExactCurve.keys())
         sortedBuckets.sort()
 

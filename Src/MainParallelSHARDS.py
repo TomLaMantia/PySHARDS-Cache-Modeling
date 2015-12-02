@@ -16,6 +16,14 @@ Version: December 2, 2015
 """
 
 import MainParallelSHARDSUtilities
+import MainSequentialSHARDSUtilities
+
+TRACE_FILE_NAME = "filteredTrace2.txt"
+PARDA_OUTPUT_FILENAME = "seq2.hist"
 
 if __name__ == '__main__':
-    MainParallelSHARDSUtilities.go()
+    estimatedCurve = MainParallelSHARDSUtilities.go(TRACE_FILE_NAME)
+    
+    exactCurve = MainSequentialUtilities.GenerateExactMRCFromTrace(PARDA_OUTPUT_FILENAME)
+    estimatedCurve.SetExactBuckets(exactCurve.GetBuckets())
+    estimatedCurve.CreateCacheCurve()

@@ -163,7 +163,7 @@ def Consumer():
     
     return
 
-def go():
+def go(traceFileName):
     
     #Initialize our thread manager
     myManager = Manager()
@@ -174,7 +174,7 @@ def go():
     workers = []
     
     #Compute the partitioning of the trace
-    fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","filteredTrace2.txt"), "r", encoding = "utf-8")
+    fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces", traceFileName), "r", encoding = "utf-8")
     tracePartitionLength = ChopTrace(GetNumberReferencesInFile(fp), NUMBER_OF_THREADS)
     
     #Start the worker threads!   
@@ -205,4 +205,4 @@ def go():
     result.SetBuckets(resultBuckets)
     result.CreateCacheCurve()
 
-    return
+    return result

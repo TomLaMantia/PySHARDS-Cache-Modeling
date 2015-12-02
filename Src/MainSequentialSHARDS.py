@@ -12,9 +12,13 @@ Version: December 2, 2015
 -------------------------------------------------------
 """
 from Histogram import Histogram
-import MainSequentialUtilities
+import MainSequentialSHARDSUtilities
 
-estimatedCurve = MainSequentialUtilities.ClassicLRUSHARDS("filteredTrace2.txt")
-exactCurve = MainSequentialUtilities.GenerateExactMRCFromTrace("seq2.hist")
-estimatedCurve.SetBuckets(exactCurve.GetBuckets())
+TRACE_FILE_NAME = "filteredTrace2.txt"
+PARDA_OUTPUT_FILENAME = "seq2.hist"
+
+estimatedCurve = MainSequentialSHARDSUtilities.ClassicLRUSHARDS(TRACE_FILE_NAME)
+
+exactCurve = MainSequentialSHARDSUtilities.GenerateExactMRCFromTrace(PARDA_OUTPUT_FILENAME)
+estimatedCurve.SetExactCurveBuckets(exactCurve.GetBuckets())
 estimatedCurve.CreateCacheCurve()
