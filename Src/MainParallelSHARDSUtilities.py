@@ -1,3 +1,20 @@
+"""
+-------------------------------------------------------
+PySHARDS Cache Curve Modeling
+
+Contains utilities used by the main program. This includes methods
+for conducting SHARDS sampling and processing exact traces.
+
+This set of utilities processes the trace in parallel, then
+combines partial histograms. This requires further estimation in
+addition to classic SHARDS sampling.
+-------------------------------------------------------
+Author:  Tom LaMantia
+Email:   tom.lamantia@mail.utoronto.ca
+Version: December 2, 2015
+-------------------------------------------------------
+"""
+
 import sys
 sys.path.append("..")
 import os
@@ -189,6 +206,3 @@ def go():
     result.CreateCacheCurve()
 
     return
-
-if __name__ == '__main__':
-    go()
