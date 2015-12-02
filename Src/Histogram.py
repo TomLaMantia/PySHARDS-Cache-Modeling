@@ -44,7 +44,7 @@ class Histogram:
         """
         return self.buckets
     
-    def SetBucketsForExactCurve(self, exactBuckets):
+    def SetBuckets(self, exactBuckets):
         """
         -------------------------------------------------------
         Setter method for the exact cache curve buckets.

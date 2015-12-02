@@ -16,5 +16,5 @@ import MainUtilities
 
 estimatedCurve = MainUtilities.ClassicLRUSHARDS("filteredTrace2.txt")
 exactCurve = MainUtilities.GenerateExactMRCFromTrace("seq2.hist")
-estimatedCurve.SetBucketsForExactCurve(exactCurve.GetBuckets())
+estimatedCurve.SetBuckets(exactCurve.GetBuckets())
 estimatedCurve.CreateCacheCurve()
