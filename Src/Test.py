@@ -6,9 +6,15 @@ from multiprocessing import Process, Manager
 from LRUDistanceTree import LRUTree
 from SampleSet import SampleSet
 from Histogram import Histogram
+from PriorityQueue import PriorityQueue
+from collections import Counter
 
 PATH_TO_TRACE_DIR = os.path.normpath(os.path.join(os.getcwd(), ".."))
-NUMBER_OF_THREADS = 2
+NUMBER_OF_THREADS = 4
+
+SAMPLE_RATE = 1
+S_MAX = 1024
+INDEX_OF_LAST_CHAR_IN_REF = 18
 
 def GetNumberReferencesInFile(fp):
     
@@ -25,14 +31,13 @@ def GetNumberReferencesInFile(fp):
 def ChopTrace(numberOfReferences, numberOfThreads):
     return numberOfReferences//numberOfThreads
 
-def Worker(myWorkerId, fileOffset, lengthToProcess, globalProcessReferenceDict):
+def Worker(myWorkerId, fileOffset, lengthToProcess, globalProcessReferenceDict, histogramList):
 
     """
     Since this is fixed size SHARDS, start by sampling every reference. The sampling rate
     will be lowered accordingly as the SampleSet reaches maximum capacity.
     """
-    SAMPLE_RATE = 1
-
+    
     mySampleSet = SampleSet(S_MAX)
     SHARDSHistogram = Histogram()
     myDistanceTree = LRUTree()
@@ -42,10 +47,10 @@ def Worker(myWorkerId, fileOffset, lengthToProcess, globalProcessReferenceDict):
 
     #Position the file pointer accordingly
     currentOffset = 0
-    thisReference = fp.readline()
+    thisReference = fp.readline().strip()
     while thisReference != "" and currentOffset < fileOffset:
         currentOffset += 1
-        thisReference  = fp.readline()
+        thisReference  = fp.readline().strip()
        
     #Process the desired partition of the trace
     currentOffset = 0
@@ -63,7 +68,7 @@ def Worker(myWorkerId, fileOffset, lengthToProcess, globalProcessReferenceDict):
             #If no, this means we have a LOCAL infinity
             if mySampleSet.FindElement(thisReference) == False:
                 
-                #We must process this local infinity
+                #We must process this local infinity to determine if it is indeed global
                 try:
                     lastProcessToAccess = globalProcessReferenceDict[globalProcessReferenceDict]
                     if lastProcessToAccess < myWorkerId:
@@ -132,6 +137,9 @@ def Worker(myWorkerId, fileOffset, lengthToProcess, globalProcessReferenceDict):
         thisReference  = fp.readline().strip()
         currentOffset += 1
 
+    print("Thread {0}. Processed {1} references".format(myWorkerId, currentOffset))
+    #Update the manager with the partial histogram
+    histogramList.append(SHARDSHistogram.GetBuckets())
     return
 
 def Consumer():
@@ -143,15 +151,18 @@ def go():
     #Initialize our thread manager
     myManager = Manager()
     globalProcessReferenceDict = myManager.dict()
-    
-    fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","filteredTrace2.txt"), "r", encoding = "utf-8")
+    histogramList = myManager.list()
 
     #Keep a list of each of the processes who are processing a piece of the trace
     workers = []
+    
+    #Compute the partitioning of the trace
+    fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","filteredTrace2.txt"), "r", encoding = "utf-8")
     tracePartitionLength = ChopTrace(GetNumberReferencesInFile(fp), NUMBER_OF_THREADS)
+    
     #Start the worker threads!   
     for i in range(0, NUMBER_OF_THREADS):
-        pid = Process(target = Worker, args = [i, i*tracePartitionLength, tracePartitionLength, globalProcessReferenceDict])
+        pid = Process(target = Worker, args = [i, i*tracePartitionLength, tracePartitionLength, globalProcessReferenceDict, histogramList])
         pid.start()
         workers.append(pid)
              
@@ -159,7 +170,24 @@ def go():
         thisWorker.join()
     for thisWorker in workers:
         thisWorker.terminate()
+        
+    #Now, merge and sum the two dictionaries
     
+    #Convert each sub dict (histogram) to a counter type
+    for i in range(0, len(histogramList)):
+        histogramList[i] = Counter(histogramList[i])
+    
+    #Sum them using counter sum method
+    resultBuckets = histogramList[0]
+    for i in range(1,len(histogramList)):
+        resultBuckets = resultBuckets + histogramList[i]
+    
+    resultBuckets = dict(resultBuckets)
+    
+    result = Histogram()
+    result.SetBuckets(resultBuckets)
+    result.CreateCacheCurve()
+
     return
 
 if __name__ == '__main__':
