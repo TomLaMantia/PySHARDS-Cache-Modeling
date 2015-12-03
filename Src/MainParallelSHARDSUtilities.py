@@ -90,7 +90,8 @@ def Worker(myWorkerId, fileOffset, lengthToProcess, globalProcessReferenceDict, 
                     lastProcessToAccess = globalProcessReferenceDict[globalProcessReferenceDict]
                     if lastProcessToAccess < myWorkerId:
                         #crunch approximate depth
-                        approximateDepth = ((myWorkerId - lastProcessToAccess) * lengthToProcess) + currentOffset
+                        #approximateDepth = ((myWorkerId - lastProcessToAccess) * lengthToProcess) + currentOffset
+                        approximateDepth = ((myWorkerId - lastProcessToAccess - 1) * lengthToProcess) + currentOffset + (0.5*lengthToProcess)
                         
                         #This reuse distance needs to be scaled before it is inserted into the histogram
                         rescaleFactor = SAMPLE_RATE/100

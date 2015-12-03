@@ -29,7 +29,8 @@ class Histogram:
         -------------------------------------------------------
         """
         self.buckets = {-1:0}
-        self.bucketsForExactCurve = None
+        self.bucketsForSecondaryCurve = None
+        self.bucketsFortTertiaryCurve = None
         
         return
 
@@ -44,17 +45,30 @@ class Histogram:
         """
         return self.buckets
     
-    def SetExactCurveBuckets(self, exactBuckets):
+    def SetTertiaryCurveBuckets(self, newBuckets):
         """
         -------------------------------------------------------
-        Setter method for the exact cache curve buckets.
+        Setter method for the tertiary cache curve buckets.
         -------------------------------------------------------
-        Preconditions: exactBuckets - a dictionary containing histogram
+        Preconditions: newBuckets - a dictionary containing histogram
             buckets for the exact cache curve.
-        Postconditions: Initializes bucketsForExactCurve.
+        Postconditions: Initializes bucketsForSecondaryCurve.
         -------------------------------------------------------
         """
-        self.bucketsForExactCurve = exactBuckets
+        self.bucketsFortTertiaryCurve = newBuckets
+        return
+    
+    def SetSecondaryCurveBuckets(self, newBuckets):
+        """
+        -------------------------------------------------------
+        Setter method for the secondary cache curve buckets.
+        -------------------------------------------------------
+        Preconditions: newBuckets - a dictionary containing histogram
+            buckets for the exact cache curve.
+        Postconditions: Initializes bucketsForSecondaryCurve.
+        -------------------------------------------------------
+        """
+        self.bucketsForSecondaryCurve = newBuckets
         return
     
     def SetBuckets(self, newBuckets):
@@ -140,7 +154,8 @@ class Histogram:
         Postconditions: Displays the cache curve defined by the histogram
         -------------------------------------------------------
         """
-        #Plot the estimated cache curve from SHARDS
+        #Plot the first cache curve
+        #-------------------------------------------------------
         sortedBuckets = list(self.buckets.keys())
         sortedBuckets.sort()
 
@@ -162,9 +177,11 @@ class Histogram:
 
         plt.plot(sortedBuckets[1:], yAxis, "r-")
         plt.axis([0,sortedBuckets[-1] + 5 ,0,1.1])
+        #-------------------------------------------------------
 
-        #Plot the exact cache curve from Parda output
-        sortedBuckets = list(self.bucketsForExactCurve.keys())
+        #Plot the secondary curve
+        #-------------------------------------------------------
+        sortedBuckets = list(self.bucketsForSecondaryCurve.keys())
         sortedBuckets.sort()
 
         yAxis = list()
@@ -172,19 +189,43 @@ class Histogram:
         
         L = 0
         for i in sortedBuckets:
-            L += self.bucketsForExactCurve[i]
+            L += self.bucketsForSecondaryCurve[i]
 
         for thisBucket in sortedBuckets:
             if thisBucket != -1:
-                nC += self.bucketsForExactCurve[thisBucket]
+                nC += self.bucketsForSecondaryCurve[thisBucket]
                 yAxis.append(nC/L)
                 
         for i in range(1,len(sortedBuckets)):
             sortedBuckets[i] *= 8
             sortedBuckets[i] /= 1024
 
-        #Plot the exact cache curve
-        plt.plot(sortedBuckets[1:], yAxis, "g-")      
+        plt.plot(sortedBuckets[1:], yAxis, "g-")   
+        #-------------------------------------------------------
+        
+        #Plot the tertiary curve
+        #-------------------------------------------------------
+        sortedBuckets = list(self.bucketsFortTertiaryCurve.keys())
+        sortedBuckets.sort()
+
+        yAxis = list()
+        nC = 0
+        
+        L = 0
+        for i in sortedBuckets:
+            L += self.bucketsFortTertiaryCurve[i]
+
+        for thisBucket in sortedBuckets:
+            if thisBucket != -1:
+                nC += self.bucketsFortTertiaryCurve[thisBucket]
+                yAxis.append(nC/L)
+                
+        for i in range(1,len(sortedBuckets)):
+            sortedBuckets[i] *= 8
+            sortedBuckets[i] /= 1024
+
+        plt.plot(sortedBuckets[1:], yAxis, "b-")   
+        #-------------------------------------------------------
         
         plt.xlabel("Cache size (KB)")
         plt.ylabel("Cache Hits (%)")

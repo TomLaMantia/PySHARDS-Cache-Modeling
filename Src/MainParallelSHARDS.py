@@ -17,13 +17,24 @@ Version: December 2, 2015
 
 import MainParallelSHARDSUtilities
 import MainSequentialSHARDSUtilities
+from time import clock
 
-TRACE_FILE_NAME = "filteredTrace2.txt"
-PARDA_OUTPUT_FILENAME = "seq2.hist"
+TRACE_FILE_NAME = "filteredTrace.txt"
+PARDA_OUTPUT_FILENAME = "seq.hist"
 
 if __name__ == '__main__':
-    estimatedCurve = MainParallelSHARDSUtilities.go(TRACE_FILE_NAME)
     
+    t1 = clock()
+    estimatedParallelCurve = MainParallelSHARDSUtilities.go(TRACE_FILE_NAME)
+    t2 = clock()
+    print("Parallel SHARDS curve constructed in: {0} seconds".format(t2-t1))
+    
+    t1 = clock()
+    estimatedSequentialCurve = MainSequentialSHARDSUtilities.ClassicLRUSHARDS(TRACE_FILE_NAME)
+    t2 = clock()
+    print("Sequential SHARDS curve constructed in: {0} seconds".format(t2-t1))
     exactCurve = MainSequentialSHARDSUtilities.GenerateExactMRCFromTrace(PARDA_OUTPUT_FILENAME)
-    estimatedCurve.SetExactCurveBuckets(exactCurve.GetBuckets())
-    estimatedCurve.CreateCacheCurve()
+    
+    estimatedParallelCurve.SetSecondaryCurveBuckets(estimatedSequentialCurve.GetBuckets())
+    estimatedParallelCurve.SetTertiaryCurveBuckets(exactCurve.GetBuckets())
+    estimatedParallelCurve.CreateCacheCurve()

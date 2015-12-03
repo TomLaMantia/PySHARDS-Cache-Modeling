@@ -121,10 +121,10 @@ def ClassicLRUSHARDS(traceName):
             print(i)            
         thisReference = fp.readline().strip()
 
-    SHARDSHistogram.PrintDetailedInfo()
+    #SHARDSHistogram.PrintDetailedInfo()
     
     #Get the time again and calculate time elapsed
     t2 = clock()
-    print("Time elapsed: {0}".format(t2 - t1))
+    #print("Time elapsed: {0}".format(t2 - t1))
 
     return SHARDSHistogram
