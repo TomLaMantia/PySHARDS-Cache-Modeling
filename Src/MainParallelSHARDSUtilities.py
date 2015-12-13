@@ -48,7 +48,7 @@ def GetNumberReferencesInFile(fp):
 def ChopTrace(numberOfReferences, numberOfThreads):
     return numberOfReferences//numberOfThreads
 
-def Worker(myWorkerId, fileOffset, lengthToProcess, globalProcessReferenceDict, histogramList):
+def Worker(myWorkerId, fileOffset, lengthToProcess, globalProcessReferenceDict, histogramList, fileName):
 
     """
     Since this is fixed size SHARDS, start by sampling every reference. The sampling rate
@@ -60,7 +60,7 @@ def Worker(myWorkerId, fileOffset, lengthToProcess, globalProcessReferenceDict, 
     myDistanceTree = LRUTree()
 
     #Open the trace file
-    fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces","filteredTrace2.txt"), "r", encoding = "utf-8")
+    fp = open(os.path.join(PATH_TO_TRACE_DIR, "Traces", fileName), "r", encoding = "utf-8")
 
     #Position the file pointer accordingly
     currentOffset = 0
@@ -180,7 +180,7 @@ def go(traceFileName):
     
     #Start the worker threads!   
     for i in range(0, NUMBER_OF_THREADS):
-        pid = Process(target = Worker, args = [i, i*tracePartitionLength, tracePartitionLength, globalProcessReferenceDict, histogramList])
+        pid = Process(target = Worker, args = [i, i*tracePartitionLength, tracePartitionLength, globalProcessReferenceDict, histogramList, traceFileName])
         pid.start()
         workers.append(pid)
              

@@ -19,8 +19,8 @@ import MainParallelSHARDSUtilities
 import MainSequentialSHARDSUtilities
 from time import clock
 
-TRACE_FILE_NAME = "filteredTrace.txt"
-PARDA_OUTPUT_FILENAME = "seq.hist"
+TRACE_FILE_NAME = "filteredTrace03.txt"
+PARDA_OUTPUT_FILENAME = "seq3.hist"
 
 if __name__ == '__main__':
     
