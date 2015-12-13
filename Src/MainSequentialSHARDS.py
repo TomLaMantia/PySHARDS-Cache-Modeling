@@ -14,11 +14,12 @@ Version: December 2, 2015
 from Histogram import Histogram
 import MainSequentialSHARDSUtilities
 
-TRACE_FILE_NAME = "filteredTrace2.txt"
+TRACE_FILE_NAME = "filteredTrace02.txt"
 PARDA_OUTPUT_FILENAME = "seq2.hist"
 
 estimatedCurve = MainSequentialSHARDSUtilities.ClassicLRUSHARDS(TRACE_FILE_NAME)
 
 exactCurve = MainSequentialSHARDSUtilities.GenerateExactMRCFromTrace(PARDA_OUTPUT_FILENAME)
-estimatedCurve.SetExactCurveBuckets(exactCurve.GetBuckets())
+estimatedCurve.SetSecondaryCurveBuckets(exactCurve.GetBuckets())
+#Red = main estimated curve. #Green = exact cache curve.
 estimatedCurve.CreateCacheCurve()

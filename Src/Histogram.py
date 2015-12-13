@@ -30,7 +30,7 @@ class Histogram:
         """
         self.buckets = {-1:0}
         self.bucketsForSecondaryCurve = None
-        self.bucketsFortTertiaryCurve = None
+        self.bucketsForTertiaryCurve = None
         
         return
 
@@ -55,7 +55,7 @@ class Histogram:
         Postconditions: Initializes bucketsForSecondaryCurve.
         -------------------------------------------------------
         """
-        self.bucketsFortTertiaryCurve = newBuckets
+        self.bucketsForTertiaryCurve = newBuckets
         return
     
     def SetSecondaryCurveBuckets(self, newBuckets):
@@ -205,26 +205,27 @@ class Histogram:
         
         #Plot the tertiary curve
         #-------------------------------------------------------
-        sortedBuckets = list(self.bucketsFortTertiaryCurve.keys())
-        sortedBuckets.sort()
-
-        yAxis = list()
-        nC = 0
-        
-        L = 0
-        for i in sortedBuckets:
-            L += self.bucketsFortTertiaryCurve[i]
-
-        for thisBucket in sortedBuckets:
-            if thisBucket != -1:
-                nC += self.bucketsFortTertiaryCurve[thisBucket]
-                yAxis.append(nC/L)
-                
-        for i in range(1,len(sortedBuckets)):
-            sortedBuckets[i] *= 8
-            sortedBuckets[i] /= 1024
-
-        plt.plot(sortedBuckets[1:], yAxis, "b-")   
+        if self.bucketsForTertiaryCurve != None:
+            sortedBuckets = list(self.bucketsForTertiaryCurve.keys())
+            sortedBuckets.sort()
+    
+            yAxis = list()
+            nC = 0
+            
+            L = 0
+            for i in sortedBuckets:
+                L += self.bucketsForTertiaryCurve[i]
+    
+            for thisBucket in sortedBuckets:
+                if thisBucket != -1:
+                    nC += self.bucketsForTertiaryCurve[thisBucket]
+                    yAxis.append(nC/L)
+                    
+            for i in range(1,len(sortedBuckets)):
+                sortedBuckets[i] *= 8
+                sortedBuckets[i] /= 1024
+    
+            plt.plot(sortedBuckets[1:], yAxis, "b-")   
         #-------------------------------------------------------
         
         plt.xlabel("Cache size (KB)")

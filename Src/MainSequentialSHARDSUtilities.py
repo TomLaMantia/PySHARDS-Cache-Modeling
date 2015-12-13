@@ -66,7 +66,7 @@ def ClassicLRUSHARDS(traceName):
     Since this is fixed size SHARDS, start by sampling every reference. The sampling rate
     will be lowered accordingly as the SampleSet reaches maximum capacity.
     """
-    SAMPLE_RATE = 1
+    SAMPLE_RATE = 0.5
 
     mySampleSet = SampleSet(S_MAX)
     SHARDSHistogram = Histogram()
